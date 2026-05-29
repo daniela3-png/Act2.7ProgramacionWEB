@@ -1,0 +1,28 @@
+{
+  "name": "act2.7programacionweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniela3-png/Act2.7ProgramacionWEB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daniela3-png/Act2.7ProgramacionWEB/issues"
+  },
+  "homepage": "https://github.com/daniela3-png/Act2.7ProgramacionWEB#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
