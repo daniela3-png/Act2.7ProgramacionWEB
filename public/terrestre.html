@@ -65,8 +65,14 @@ footer{
     padding:15px;
 }
 
-</style>
+.error{
+    text-align:center;
+    color:red;
+    font-weight:bold;
+    padding:20px;
+}
 
+</style>
 </head>
 <body>
 
@@ -75,32 +81,9 @@ footer{
     <p>Especies adaptadas al desierto y cordillera de Tarapacá</p>
 </header>
 
-<div class="contenedor">
 
-    <div class="tarjeta">
-        <h2>Guanaco</h2>
-
-        <p><strong>Hábitat:</strong> Cordillera de la Costa.</p>
-
-        <p>
-            Camélido silvestre característico del norte de Chile,
-            capaz de sobrevivir en ambientes áridos gracias a
-            su adaptación al clima desértico.
-        </p>
-    </div>
-
-    <div class="tarjeta">
-        <h2>Zorro Chilla</h2>
-
-        <p><strong>Hábitat:</strong> Desierto de Atacama.</p>
-
-        <p>
-            Pequeño cánido nativo de Chile que destaca por
-            su capacidad para encontrar alimento en condiciones
-            extremas del desierto.
-        </p>
-    </div>
-
+<div class="contenedor" id="contenedor">
+    <p>Cargando datos...</p>
 </div>
 
 <div style="text-align:center; margin-bottom:30px;">
@@ -110,6 +93,46 @@ footer{
 <footer>
     Proyecto Programación Web - Fauna de Iquique
 </footer>
+
+<script>
+    // Llamamos al endpoint del backend para pedir los datos
+    fetch('/api/fauna/terrestre')
+        .then(function(respuesta) {
+            
+            if (!respuesta.ok) {
+                throw new Error('Error del servidor: ' + respuesta.status);
+            }
+            // Convertimos la respuesta a JSON
+            return respuesta.json();
+        })
+        .then(function(animales) {
+            
+            const contenedor = document.getElementById('contenedor');
+            
+            contenedor.innerHTML = '';
+
+            // Por cada animal que vino de la API, creamos una tarjeta
+            animales.forEach(function(animal) {
+                const tarjeta = document.createElement('div'); 
+                tarjeta.classList.add('tarjeta');               
+
+                // Llenamos la tarjeta con los datos del animal
+                tarjeta.innerHTML = `
+                    <h2>${animal.nombre}</h2>
+                    <p><strong>Hábitat:</strong> ${animal.habitat}</p>
+                    <p>${animal.info}</p>
+                `;
+
+                // Agregamos la tarjeta al contenedor
+                contenedor.appendChild(tarjeta);
+            });
+        })
+        .catch(function(error) {
+            
+            const contenedor = document.getElementById('contenedor');
+            contenedor.innerHTML = '<p class="error">No se pudieron cargar los datos: ' + error.message + '</p>';
+        });
+</script>
 
 </body>
 </html>
