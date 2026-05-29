@@ -65,8 +65,14 @@ footer{
     padding:15px;
 }
 
-</style>
+.error{
+    text-align:center;
+    color:red;
+    font-weight:bold;
+    padding:20px;
+}
 
+</style>
 </head>
 <body>
 
@@ -75,32 +81,9 @@ footer{
     <p>Especies representativas de la costa de Tarapacá</p>
 </header>
 
-<div class="contenedor">
-
-    <div class="tarjeta">
-        <h2>Lobo Marino de un Pelo</h2>
-
-        <p><strong>Hábitat:</strong> Costas de Cavancha.</p>
-
-        <p>
-            Es común observar grupos de lobos marinos
-            descansando sobre las rocas cercanas al puerto
-            y sectores costeros de Iquique.
-        </p>
-    </div>
-
-    <div class="tarjeta">
-        <h2>Pingüino de Humboldt</h2>
-
-        <p><strong>Hábitat:</strong> Islotes cercanos.</p>
-
-        <p>
-            Especie protegida que habita en zonas rocosas
-            del norte de Chile y forma parte importante
-            de la biodiversidad marina.
-        </p>
-    </div>
-
+<!-- Contenedor vacío, JavaScript llenará las tarjetas -->
+<div class="contenedor" id="contenedor">
+    <p>Cargando datos...</p>
 </div>
 
 <div style="text-align:center; margin-bottom:30px;">
@@ -110,6 +93,46 @@ footer{
 <footer>
     Proyecto Programación Web - Fauna de Iquique
 </footer>
+
+<script>
+    // Llamamos al endpoint del backend para pedir los datos
+    fetch('/api/fauna/marina')
+        .then(function(respuesta) {
+            
+            if (!respuesta.ok) {
+                throw new Error('Error del servidor: ' + respuesta.status);
+            }
+            // Convertimos la respuesta a JSON
+            return respuesta.json();
+        })
+        .then(function(animales) {
+            // Seleccionamos el contenedor donde van las tarjetas
+            const contenedor = document.getElementById('contenedor');
+            // Borramos el texto "Cargando datos..."
+            contenedor.innerHTML = '';
+
+            // Por cada animal que vino de la API, creamos una tarjeta
+            animales.forEach(function(animal) {
+                const tarjeta = document.createElement('div'); 
+                tarjeta.classList.add('tarjeta');               
+
+                // Llenamos la tarjeta con los datos 
+                tarjeta.innerHTML = `
+                    <h2>${animal.nombre}</h2>
+                    <p><strong>Hábitat:</strong> ${animal.habitat}</p>
+                    <p>${animal.info}</p>
+                `;
+
+                // Agregamos la tarjeta al contenedor
+                contenedor.appendChild(tarjeta);
+            });
+        })
+        .catch(function(error) {
+            
+            const contenedor = document.getElementById('contenedor');
+            contenedor.innerHTML = '<p class="error">No se pudieron cargar los datos: ' + error.message + '</p>';
+        });
+</script>
 
 </body>
 </html>
